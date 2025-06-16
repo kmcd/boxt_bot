@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+require "boxt_bot"
+
+file = File.open ARGV.first
+simulation = BoxtBot::Simulation.new file: file, size: 5
+simulation.run

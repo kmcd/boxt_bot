@@ -1,0 +1,10 @@
+foo
+bar
+PLACE 1,1,baz
+PLACE -1,1,south
+PLACE asdfadf,asdfasdf,asdfasdf
+MOVE
+REPORT
+PLACE 0,0,north
+MOVE
+REPORT
