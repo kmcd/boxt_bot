@@ -1,35 +1,44 @@
 # BoxtBot
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/boxt_bot`. To experiment with that code, run `bin/console` for an interactive prompt.
+BOXT simulation robot.
+
+**N.B.** Written without any LLM assistance.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+After checking out the repo locally, run `bundle install` to install dependencies.
 
-```ruby
-gem 'boxt_bot'
-```
+Then, run `rake test` to run the test suite.
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install boxt_bot
+You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 ## Usage
 
+You can run a simulation by passing a test file path:
+
 ```bash
-bin/simulation test/fixtures/simulation_02.txt
+bin/simulation SIMULATION_FILE_PATH
 ```
 
-## Development
+For example:
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```bash
+bin/simulation test/fixtures/simulation_01.txt
+0,1,NORTH
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```bash
+bin/simulation test/fixtures/simulation_02.txt
+0,1,NORTH
+0,0,WEST
+3,3,NORTH
+```
 
-## Contributing
+## Notes
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/boxt_bot.
+Kept all logic in `./lib/boxt_bot.rb` to speed things up. Usually I'd have one
+class per file. Same applies to `./test/boxt_bot_test.rb`.
+
+`BoxtBot::TableTop` does not validate the initialize size argument. As this is
+not passed from user input or dynamically assigned, I think this is acceptable
+for this exercise. Invalid sizes (e.g. `-1`, `a` etc.) will raise an exception, which I'm assuming is a development (not run) time concern.

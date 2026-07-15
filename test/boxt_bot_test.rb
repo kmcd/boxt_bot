@@ -15,8 +15,8 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_equal BoxtBot::Position.new(x, y), @robot.position
   end
 
-  def assert_orientation(orientatation, robot)
-    assert_equal orientatation, robot.orientatation
+  def assert_orientation(orientation, robot)
+    assert_equal orientation, robot.orientation
   end
 
   test "place at origin" do
@@ -44,7 +44,7 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_placed(@robot, 0, 0)
   end
 
-  test "place with valid orientatations" do
+  test "place with valid orientations" do
     @robot.place 0, 0, :north
     assert_orientation("north", @robot)
 
@@ -58,9 +58,9 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_orientation("west", @robot)
   end
 
-  test "place with invalid orientatations does not change orientatation" do
+  test "place with invalid orientations does not change orientation" do
     @robot.place 0, 0, :foo
-    assert_nil(@robot.orientatation)
+    assert_nil(@robot.orientation)
     assert_nil(@robot.position)
 
     @robot.place 0, 0, :north
@@ -68,7 +68,7 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_orientation("north", @robot)
   end
 
-  test "change orientatation 90 degrees to the left" do
+  test "change orientation 90 degrees to the left" do
     @robot.place 0, 0, :north
 
     @robot.left
@@ -78,7 +78,7 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_orientation("south", @robot)
   end
 
-  test "change orientatation 90 degrees to the right" do
+  test "change orientation 90 degrees to the right" do
     @robot.place 0, 0, :north
 
     @robot.right
@@ -88,7 +88,7 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_orientation("south", @robot)
   end
 
-  test "move one position with correct orientatation" do
+  test "move one position with correct orientation" do
     @robot.place 0, 0, :north
     @robot.move
     assert_placed(@robot, 0, 1)
@@ -114,7 +114,7 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     assert_placed(@robot, 0, 1)
   end
 
-  test "move one position with incorrect orientatation" do
+  test "move one position with incorrect orientation" do
     @robot.place 0, 0, :south
     @robot.move
     assert_placed(@robot, 0, 0)
@@ -147,10 +147,10 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
 
   test "wait for valid placement before changing orientation" do
     @robot.left
-    assert_nil @robot.orientatation
+    assert_nil @robot.orientation
 
     @robot.right
-    assert_nil @robot.orientatation
+    assert_nil @robot.orientation
   end
 end
 
@@ -161,7 +161,7 @@ class BoxtBot::SimulationTest < ActiveSupport::TestCase
     capture_io { simulation.run }.first.split "\n"
   end
 
-  test "report current position and orientatation to stdout" do
+  test "report current position and orientation to stdout" do
     stdout = run_simulation "simulation_01"
     assert_equal ["0,1,NORTH"], stdout
   end
@@ -174,7 +174,7 @@ end
 
 class BoxtBot::TableTopTest < ActiveSupport::TestCase
   setup do
-    @table_top = BoxtBot::TableTop.new
+    @table_top = BoxtBot::TableTop.new size: 2
   end
 
   test "place at position" do
@@ -182,6 +182,11 @@ class BoxtBot::TableTopTest < ActiveSupport::TestCase
 
     assert_equal 0, position.y
     assert_equal 0, position.x
+
+    position = @table_top.place(1, 1)
+
+    assert_equal 1, position.y
+    assert_equal 1, position.x
   end
 
   test "gracefully handle invalid position placement" do

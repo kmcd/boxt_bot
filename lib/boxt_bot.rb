@@ -18,7 +18,7 @@ module BoxtBot
       compass.rotate!(1) if position.present?
     end
 
-    def orientatation
+    def orientation
       compass.first if position.present?
     end
 
@@ -32,7 +32,7 @@ module BoxtBot
     def move
       return unless position.present?
 
-      case orientatation
+      case orientation
       when /north/i then change_position(position.x, position.y + 1)
       when /south/i then change_position(position.x, position.y - 1)
       when /east/i then change_position(position.x + 1, position.y)
@@ -43,7 +43,7 @@ module BoxtBot
     def to_s
       return unless position.present?
 
-      [position.x, position.y, orientatation.upcase].join ","
+      [position.x, position.y, orientation.upcase].join ","
     end
 
     private
@@ -55,7 +55,7 @@ module BoxtBot
     end
 
     def change_orientation(point)
-      right until orientatation == point.to_s
+      right until orientation == point.to_s
     end
 
     def placement_valid?(x, y, point)
