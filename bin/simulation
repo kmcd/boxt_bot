@@ -6,7 +6,5 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "boxt_bot"
 
 file = File.open ARGV.first
-simulation_size = ARGV[1].to_i || 5
-
-simulation = BoxtBot::Simulation.new file: file, size: simulation_size
+simulation = BoxtBot::Simulation.new file: file
 simulation.run

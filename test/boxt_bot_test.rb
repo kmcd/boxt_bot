@@ -37,10 +37,9 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
 
   test "place in invalid position maintains existing position" do
     @robot.place 0, 0, :north
-    @robot.place 2, 2, :north
     assert_placed(@robot, 0, 0)
 
-    @robot.place(-1, -1, :north)
+    @robot.place 5, 4, :north
     assert_placed(@robot, 0, 0)
   end
 
@@ -89,6 +88,7 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
   end
 
   test "move one position with correct orientation" do
+    # south west corner
     @robot.place 0, 0, :north
     @robot.move
     assert_placed(@robot, 0, 1)
@@ -97,24 +97,36 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     @robot.move
     assert_placed(@robot, 1, 0)
 
-    @robot.place 0, 1, :south
+    # north west corner
+    @robot.place 0, 4, :south
     @robot.move
-    assert_placed(@robot, 0, 0)
+    assert_placed(@robot, 0, 3)
 
-    @robot.place 0, 1, :east
+    @robot.place 0, 4, :east
     @robot.move
-    assert_placed(@robot, 1, 1)
+    assert_placed(@robot, 1, 4)
 
-    @robot.place 1, 1, :south
+    # north east corner
+    @robot.place 4, 4, :south
     @robot.move
-    assert_placed(@robot, 1, 0)
+    assert_placed(@robot, 4, 3)
 
-    @robot.place 1, 1, :west
+    @robot.place 4, 4, :west
     @robot.move
-    assert_placed(@robot, 0, 1)
+    assert_placed(@robot, 3, 4)
+
+    # south east corner
+    @robot.place 4, 0, :north
+    @robot.move
+    assert_placed(@robot, 4, 1)
+
+    @robot.place 4, 0, :west
+    @robot.move
+    assert_placed(@robot, 3, 0)
   end
 
   test "move one position with incorrect orientation" do
+    # south west corner
     @robot.place 0, 0, :south
     @robot.move
     assert_placed(@robot, 0, 0)
@@ -123,21 +135,32 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
     @robot.move
     assert_placed(@robot, 0, 0)
 
-    @robot.place 0, 1, :north
+    # north west corner
+    @robot.place 0, 4, :north
     @robot.move
-    assert_placed(@robot, 0, 1)
+    assert_placed(@robot, 0, 4)
 
-    @robot.place 0, 1, :west
+    @robot.place 0, 4, :west
     @robot.move
-    assert_placed(@robot, 0, 1)
+    assert_placed(@robot, 0, 4)
 
-    @robot.place 1, 1, :north
+    # north east corner
+    @robot.place 4, 4, :north
     @robot.move
-    assert_placed(@robot, 1, 1)
+    assert_placed(@robot, 4, 4)
 
-    @robot.place 1, 1, :east
+    @robot.place 4, 4, :east
     @robot.move
-    assert_placed(@robot, 1, 1)
+    assert_placed(@robot, 4, 4)
+
+    # south east corner
+    @robot.place 4, 0, :south
+    @robot.move
+    assert_placed(@robot, 4, 0)
+
+    @robot.place 4, 0, :east
+    @robot.move
+    assert_placed(@robot, 4, 0)
   end
 
   test "wait for valid placement before moving" do
@@ -155,9 +178,9 @@ class BoxtBot::RobotTest < ActiveSupport::TestCase
 end
 
 class BoxtBot::SimulationTest < ActiveSupport::TestCase
-  def run_simulation(name, size: 2)
+  def run_simulation(name)
     file = File.open File.expand_path("../../test/fixtures/#{name}.txt", __FILE__)
-    simulation = BoxtBot::Simulation.new file: file, size: size
+    simulation = BoxtBot::Simulation.new file: file
     capture_io { simulation.run }.first.split "\n"
   end
 
@@ -166,15 +189,15 @@ class BoxtBot::SimulationTest < ActiveSupport::TestCase
     assert_equal ["0,1,NORTH"], stdout
   end
 
-  test "run 5x5 example simulation" do
-    stdout = run_simulation "simulation_02", size: 5
+  test "run movement simulation" do
+    stdout = run_simulation "simulation_02"
     assert_equal ["0,1,NORTH", "0,0,WEST", "3,3,NORTH"], stdout
   end
 end
 
 class BoxtBot::TableTopTest < ActiveSupport::TestCase
   setup do
-    @table_top = BoxtBot::TableTop.new size: 2
+    @table_top = BoxtBot::TableTop.new
   end
 
   test "place at position" do
@@ -191,7 +214,8 @@ class BoxtBot::TableTopTest < ActiveSupport::TestCase
 
   test "gracefully handle invalid position placement" do
     assert_nil @table_top.place(-1, -1)
-    assert_nil @table_top.place(0, 2)
-    assert_nil @table_top.place(2, 0)
+    assert_nil @table_top.place(0, 5)
+    assert_nil @table_top.place(5, 0)
+    assert_nil @table_top.place(5, 5)
   end
 end

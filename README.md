@@ -14,11 +14,10 @@ You can also run `bin/console` for an interactive prompt that will allow you to 
 
 ## Usage
 
-You can run a simulation by passing a mandatory test file path. The
-table top size is optional (default size is 5).
+You can run a simulation by passing a mandatory test file path.
 
 ```bash
-bin/simulation SIMULATION_FILE_PATH TABLE_TOP_SIZE
+bin/simulation SIMULATION_FILE_PATH
 ```
 
 ## Simulation Examples
@@ -39,10 +38,10 @@ bin/simulation test/fixtures/simulation_02.txt
 3,3,NORTH
 ```
 
-Start at 0,0 facing north and move right (clockwise) around a 2x2 table top:
+Start at 0,0 facing north and move right (clockwise)
 
 ```bash
-bin/simulation test/fixtures/simulation_03.txt 2
+bin/simulation test/fixtures/simulation_03.txt
 0,1,NORTH
 1,1,EAST
 1,0,SOUTH
@@ -54,8 +53,4 @@ bin/simulation test/fixtures/simulation_03.txt 2
 Kept all logic in `./lib/boxt_bot.rb` to . Usually I'd have one
 class per file. Same applies to `./test/boxt_bot_test.rb`.
 
-`BoxtBot::TableTop` does not validate the initialize size argument. As this is
-not passed from user input or dynamically assigned, I think this is acceptable
-for this exercise. Invalid sizes (e.g. `-1`, `a` etc.) will raise an exception, which I'm assuming is a development (not run) time concern.
-
-`bin/simulation` does not use switches (e.g. --file PATH --size 5) or validate arguments. This is due to time contraints appropriate to the exercise.
+`bin/simulation` does not use switches or validate arguments.

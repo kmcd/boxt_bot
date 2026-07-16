@@ -33,10 +33,10 @@ module BoxtBot
       return unless position.present?
 
       case orientation
-      when /north/i then change_position(position.x, position.y + 1)
-      when /south/i then change_position(position.x, position.y - 1)
-      when /east/i then change_position(position.x + 1, position.y)
-      when /west/i then change_position(position.x - 1, position.y)
+        when /north/i then change_position(position.x, position.y + 1)
+        when /south/i then change_position(position.x, position.y - 1)
+        when /east/i then change_position(position.x + 1, position.y)
+        when /west/i then change_position(position.x - 1, position.y)
       end
     end
 
@@ -68,19 +68,19 @@ module BoxtBot
   class Simulation
     attr_reader :commands
 
-    def initialize(file:, size: 2)
+    def initialize(file:)
       @commands = file.readlines
-      @robot = BoxtBot::Robot.new BoxtBot::TableTop.new size: size
+      @robot = BoxtBot::Robot.new BoxtBot::TableTop.new
     end
 
     def run
       commands.each do |command|
         case command
-        when /^left$/i then @robot.left
-        when /^move$/i then @robot.move
-        when /^place\s+(\d+),(\d+),(\w+)$/i then @robot.place($1.to_i, $2.to_i, $3.downcase)
-        when /^report$/i then $stdout.puts(@robot.to_s) if @robot.to_s
-        when /^right$/i then @robot.right
+          when /^left$/i then @robot.left
+          when /^move$/i then @robot.move
+          when /^place\s+(\d+),(\d+),(\w+)$/i then @robot.place($1.to_i, $2.to_i, $3.downcase)
+          when /^report$/i then $stdout.puts(@robot.to_s) if @robot.to_s
+          when /^right$/i then @robot.right
         end
       end
     end
@@ -89,7 +89,7 @@ module BoxtBot
   class TableTop
     attr_reader :positions
 
-    def initialize(size: 2)
+    def initialize(size: 5)
       @positions = Array.new(size) do |x|
         Array.new(size) do |y|
           Position.new(x, y)
